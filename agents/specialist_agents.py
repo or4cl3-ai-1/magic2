@@ -40,12 +40,12 @@ class ExplorerAgent(BaseAgent):
 
 
 class OptimizerAgent(BaseAgent):
-    """Runs the genetic algorithm / trains networks."""
+    """Runs the genetic algorithm – can evolve weights or full architectures."""
 
     def __init__(self, bus: MessageBus, name: str = "Optimizer", ga=None, nn=None):
         super().__init__(
             name=name,
-            capabilities=["optimize", "evolve", "train"],
+            capabilities=["optimize", "evolve", "train", "architecture_search"],
             bus=bus,
             role="optimizer",
         )
@@ -53,17 +53,31 @@ class OptimizerAgent(BaseAgent):
         self.nn = nn
 
     def execute(self, task: dict) -> Any:
-        if self.ga is None or self.nn is None:
-            return {"error": "GA or NN not injected", "agent": self.name}
+        if self.ga is None:
+            return {"error": "GA not injected", "agent": self.name}
 
         generations = task.get("generations", 30)
+        mode = task.get("mode", "weights")  # "weights" | "architecture"
+
         result = self.ga.evolve(generations=generations)
         self.beliefs["last_best_fitness"] = result["best_fitness"]
-        return {
+
+        out = {
             "best_fitness": result["best_fitness"],
             "generations_run": result["generations_run"],
+            "mode": mode,
             "agent": self.name,
         }
+
+        if mode == "architecture" and result.get("best_individual") is not None:
+            try:
+                from architecture_genome import genome_to_readable, decode_genome
+                out["architecture"] = genome_to_readable(result["best_individual"])
+                out["layers"] = decode_genome(result["best_individual"])
+            except Exception:
+                pass
+
+        return out
 
 
 class CriticAgent(BaseAgent):
