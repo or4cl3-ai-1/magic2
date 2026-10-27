@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M.A.G.I.C. — Multi-Agent Global Intelligence Collaboration</title>
+  <meta name="description" content="Where genetic algorithms, neural evolution, and multi-agent collaboration converge. The intelligence substrate that learns, adapts, and evolves with you." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #03040a;
+      --bg-elevated: #0a0c16;
+      --surface: rgba(16, 20, 36, 0.7);
+      --border: rgba(120, 140, 255, 0.15);
+      --text: #e8ecff;
+      --text-muted: #8b93b8;
+      --accent: #6c8cff;
+      --accent-2: #a78bfa;
+      --accent-3: #22d3ee;
+      --glow: 0 0 40px rgba(108, 140, 255, 0.35);
+      --font-display: 'Orbitron', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    #cosmos {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .gradient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.35;
+      z-index: 0;
+      pointer-events: none;
+      animation: float 18s ease-in-out infinite;
+    }
+    .orb-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, #4f6ef7 0%, transparent 70%);
+      top: -180px; left: -120px;
+    }
+    .orb-2 {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+      bottom: -100px; right: -80px;
+      animation-delay: -7s;
+    }
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
+      top: 40%; left: 55%;
+      animation-delay: -12s;
+      opacity: 0.2;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(40px, -30px) scale(1.05); }
+      66% { transform: translate(-30px, 20px) scale(0.95); }
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.1rem 0;
+      backdrop-filter: blur(16px);
+      background: rgba(3, 4, 10, 0.65);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    nav.scrolled {
+      border-bottom-color: var(--border);
+      background: rgba(3, 4, 10, 0.88);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: 0.12em;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent-2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      padding: 0.5rem 1.15rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff !important;
+      font-weight: 600;
+      font-size: 0.85rem;
+      box-shadow: var(--glow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 50px rgba(108, 140, 255, 0.5);
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 0 5rem;
+      position: relative;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(108, 140, 255, 0.1);
+      border: 1px solid rgba(108, 140, 255, 0.25);
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.75rem;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent-3);
+      box-shadow: 0 0 10px var(--accent-3);
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 8vw, 5.2rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+    .hero h1 .line2 {
+      display: block;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 45%, var(--accent-3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      max-width: 560px;
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 1.7rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.25s;
+      cursor: pointer;
+      border: none;
+      font-family: var(--font-body);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      box-shadow: var(--glow);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(108, 140, 255, 0.55);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: rgba(108, 140, 255, 0.4);
+      background: rgba(108, 140, 255, 0.08);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin: 0 auto 6rem;
+      max-width: 900px;
+    }
+    .stat {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+    }
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    section { padding: 5.5rem 0; }
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      max-width: 540px;
+      font-size: 1.05rem;
+      margin-bottom: 3rem;
+    }
+
+    .capabilities {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .cap-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .cap-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .cap-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(108, 140, 255, 0.35);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .cap-card:hover::before { opacity: 1; }
+    .cap-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.1rem;
+      background: linear-gradient(135deg, rgba(108,140,255,0.15), rgba(167,139,250,0.15));
+      border: 1px solid rgba(108,140,255,0.2);
+    }
+    .cap-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.02em;
+    }
+    .cap-card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .pipeline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 3rem 0;
+    }
+    .pipe-node {
+      padding: 0.85rem 1.3rem;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .pipe-node:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 25px rgba(108,140,255,0.25);
+    }
+    .pipe-node.accent {
+      background: linear-gradient(135deg, rgba(108,140,255,0.2), rgba(167,139,250,0.2));
+      border-color: rgba(108,140,255,0.4);
+    }
+    .pipe-arrow {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      opacity: 0.5;
+    }
+
+    .code-block {
+      background: #07090f;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      font-family: 'SF Mono', 'Fira Code', ui-monospace, monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.75rem 1.1rem;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .code-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .code-dot.r { background: #ff5f57; }
+    .code-dot.y { background: #febc2e; }
+    .code-dot.g { background: #28c840; }
+    .code-title {
+      margin-left: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    .code-body {
+      padding: 1.25rem 1.4rem;
+      overflow-x: auto;
+      color: #c8d0f0;
+    }
+    .code-body .c { color: #6a738f; }
+    .code-body .k { color: #c792ea; }
+    .code-body .s { color: #c3e88d; }
+    .code-body .f { color: #82aaff; }
+    .code-body .n { color: #f78c6c; }
+
+    .final-cta {
+      text-align: center;
+      padding: 6rem 0 7rem;
+      position: relative;
+    }
+    .final-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+    .final-cta p {
+      color: var(--text-muted);
+      max-width: 480px;
+      margin: 0 auto 2.25rem;
+      font-size: 1.1rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .hero { padding-top: 7rem; }
+      .pipeline { flex-direction: column; }
+      .pipe-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="cosmos"></canvas>
+  <div class="gradient-orb orb-1"></div>
+  <div class="gradient-orb orb-2"></div>
+  <div class="gradient-orb orb-3"></div>
+
+  <nav id="nav">
+    <div class="nav-inner">
+      <a href="#" class="logo">M.A.G.I.C.</a>
+      <ul class="nav-links">
+        <li><a href="#capabilities">Capabilities</a></li>
+        <li><a href="#pipeline">Pipeline</a></li>
+        <li><a href="#code">Code</a></li>
+        <li><a href="https://github.com/or4cl3-ai-1/magic2" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/or4cl3-ai-1/magic2" class="nav-cta" target="_blank" rel="noopener">Explore</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero wrap">
+    <div class="hero-badge">Multi-Agent · Evolutionary · Continual</div>
+    <h1>
+      Intelligence that
+      <span class="line2">collaborates &amp; evolves</span>
+    </h1>
+    <p class="hero-sub">
+      M.A.G.I.C. fuses genetic regenerative algorithms, dynamic neural architectures,
+      and multi-agent coordination into a living substrate for adaptive problem-solving.
+    </p>
+    <div class="hero-actions">
+      <a href="https://github.com/or4cl3-ai-1/magic2" class="btn btn-primary" target="_blank" rel="noopener">
+        View on GitHub
+      </a>
+      <a href="#pipeline" class="btn btn-ghost">See how it works</a>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Specialist Agents</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">9</div>
+        <div class="stat-label">Learning Paradigms</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">∞</div>
+        <div class="stat-label">Evolvable Topologies</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">0.4</div>
+        <div class="stat-label">Current Version</div>
+      </div>
+    </div>
+  </div>
+
+  <section id="capabilities">
+    <div class="wrap">
+      <div class="section-label">Capabilities</div>
+      <h2 class="section-title">A complete intelligence substrate</h2>
+      <p class="section-desc">
+        From genetic search to multi-agent negotiation, every layer is designed
+        to adapt, remember, and improve.
+      </p>
+      <div class="capabilities">
+        <div class="cap-card">
+          <div class="cap-icon">🧬</div>
+          <h3>Genetic Regenerative Algorithms</h3>
+          <p>Elitism, real-valued genomes, injectable fitness, and full evolutionary telemetry. The search never stops improving.</p>
+        </div>
+        <div class="cap-card">
+          <div class="cap-icon">🧠</div>
+          <h3>Architecture Search</h3>
+          <p>Evolve layer types, depths, sizes, and activations — not just weights. Discover topologies the human mind wouldn’t try.</p>
+        </div>
+        <div class="cap-card">
+          <div class="cap-icon">🤝</div>
+          <h3>Multi-Agent Coordination</h3>
+          <p>Explorer, Optimizer, Critic, and MemoryKeeper negotiate via auction-based allocation. True collaboration, not a single model.</p>
+        </div>
+        <div class="cap-card">
+          <div class="cap-icon">🔄</div>
+          <h3>Learning Paradigm Switching</h3>
+          <p>Deep, reinforcement, meta, self-supervised, ensemble, and more — switched at runtime to match the task.</p>
+        </div>
+        <div class="cap-card">
+          <div class="cap-icon">💾</div>
+          <h3>Persistent Experience Memory</h3>
+          <p>SQLite-backed store of insights, critiques, and outcomes. Every run leaves the system wiser.</p>
+        </div>
+        <div class="cap-card">
+          <div class="cap-icon">📡</div>
+          <h3>Live Telemetry &amp; Interface</h3>
+          <p>Progress streams to a clean API and CLI. Ready for the dashboard that will make it unforgettable.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pipeline">
+    <div class="wrap" style="text-align:center;">
+      <div class="section-label">The Pipeline</div>
+      <h2 class="section-title">From goal to evolved intelligence</h2>
+      <p class="section-desc" style="margin-left:auto;margin-right:auto;">
+        A high-level goal enters the system. Agents bid, specialize, critique, and remember.
+      </p>
+      <div class="pipeline">
+        <div class="pipe-node">Goal</div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-node accent">Explorer</div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-node accent">Optimizer</div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-node accent">Critic</div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-node accent">MemoryKeeper</div>
+        <span class="pipe-arrow">→</span>
+        <div class="pipe-node">Insight</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="code">
+    <div class="wrap">
+      <div class="section-label">Get Started</div>
+      <h2 class="section-title">One command away</h2>
+      <p class="section-desc">
+        Pure Python + NumPy at the core. Optional Flask, TensorFlow, DEAP when you want them.
+      </p>
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-dot r"></span>
+          <span class="code-dot y"></span>
+          <span class="code-dot g"></span>
+          <span class="code-title">terminal</span>
+        </div>
+        <div class="code-body">
+          <span class="c"># Clone and enter</span><br>
+          <span class="f">git clone</span> https://github.com/or4cl3-ai-1/magic2.git<br>
+          <span class="f">cd</span> magic2<br><br>
+          <span class="c"># Core dependency only</span><br>
+          <span class="f">pip install</span> numpy<br><br>
+          <span class="c"># Multi-agent collaboration</span><br>
+          <span class="f">python</span> main.py <span class="s">--multi-agent</span><br><br>
+          <span class="c"># Evolutionary architecture search</span><br>
+          <span class="f">python</span> main.py <span class="s">--arch-search</span><br><br>
+          <span class="c"># Interactive interface</span><br>
+          <span class="f">python</span> main.py <span class="s">--ui</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="wrap">
+      <h2>The future doesn’t wait.<br>Neither should your intelligence layer.</h2>
+      <p>
+        M.A.G.I.C. began as an early vision in 2023. It has returned stronger —
+        evolvable, multi-agent, and ready for what comes next.
+      </p>
+      <div class="hero-actions">
+        <a href="https://github.com/or4cl3-ai-1/magic2" class="btn btn-primary" target="_blank" rel="noopener">
+          Launch on GitHub
+        </a>
+        <a href="mailto:or4cl3ai@gmail.com" class="btn btn-ghost">Contact Or4cl3</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p>
+        Crafted by <strong>Dustin Groves</strong> · Or4cl3 AI Solutions<br>
+        <a href="https://github.com/or4cl3-ai-1/magic2">github.com/or4cl3-ai-1/magic2</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('cosmos');
+    const ctx = canvas.getContext('2d');
+    let w, h, particles = [];
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+      constructor() { this.reset(true); }
+      reset(init = false) {
+        this.x = Math.random() * w;
+        this.y = init ? Math.random() * h : h + 10;
+        this.size = Math.random() * 1.6 + 0.4;
+        this.speed = Math.random() * 0.35 + 0.08;
+        this.opacity = Math.random() * 0.45 + 0.1;
+        this.drift = (Math.random() - 0.5) * 0.3;
+      }
+      update() {
+        this.y -= this.speed;
+        this.x += this.drift;
+        if (this.y < -10) this.reset();
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(160, 180, 255, ${this.opacity})`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 90; i++) particles.push(new Particle());
+
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+      particles.forEach(p => { p.update(); p.draw(); });
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 110) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(108, 140, 255, ${0.06 * (1 - dist / 110)})`;
+            ctx.lineWidth = 0.6;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+  </script>
+</body>
+</html>
