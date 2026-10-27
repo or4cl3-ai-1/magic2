@@ -1,89 +1,68 @@
-## Implementation approach
-The M.A.G.I.C. application is a complex system that combines genetic algorithms, diverse neural network types, and continual learning mechanisms. The implementation will be done in Python, leveraging several open-source libraries for machine learning and genetic algorithms. 
+# M.A.G.I.C. System Design – v0.2
 
-The difficult points of the requirements include the development of a minimalist base framework for genetic algorithms, population management, and basic neural network operations, the implementation of mechanisms for dynamic layer generation, learning paradigm integration, and continual learning, and the creation of a user-friendly interface for task input, monitoring, and feedback. 
+## Implementation Approach (Updated)
 
-For the genetic algorithms and neural network operations, we will use DEAP (Distributed Evolutionary Algorithms in Python), an open-source library that provides tools for the design of evolutionary algorithms. For the dynamic layer generation and learning paradigm integration, we will use Keras, a high-level neural networks API, written in Python and capable of running on top of TensorFlow, CNTK, or Theano. For the continual learning, we will use TensorFlow, an open-source library for machine learning and artificial intelligence. For the user interface, we will use Flask, a lightweight WSGI web application framework.
+M.A.G.I.C. is implemented as a pure-Python package with a minimal core dependency on NumPy. Optional backends (DEAP, TensorFlow/Keras, Flask) can be enabled when available. The design prioritises:
 
-## Python package name
-```python
-"magic_ai"
+- Zero hard external dependencies for the evolutionary core
+- Clear public APIs that match the original 2023 class diagram
+- Injectable fitness functions so the same GA can optimise any task
+- Persistent experience storage for continual learning
+- Live telemetry so a monitoring UI can be attached without invasive changes
+
+## Package Layout
+
+```
+magic2/
+├── genetic_algorithm.py   # Adaptive GA (binary + real-valued)
+├── neural_network.py      # Dual-backend NN (NumPy / Keras)
+├── dynamic_layer.py       # Layer specification generator + mutation
+├── learning_paradigm.py   # Runtime paradigm switching
+├── memory_module.py       # SQLite-backed experience store
+├── user_interface.py      # Flask API + CLI fallback
+├── main.py                # Orchestrator + demo
+├── __init__.py            # Clean public exports
+├── requirements.txt
+├── prd.md                 # Original product requirements
+└── system_design.md       # This document
 ```
 
-## File list
-```python
-[
-    "main.py",
-    "genetic_algorithm.py",
-    "neural_network.py",
-    "dynamic_layer.py",
-    "learning_paradigm.py",
-    "user_interface.py",
-    "memory_module.py"
-]
-```
+## Class Responsibilities (v0.2)
 
-## Data structures and interface definitions
-```mermaid
-classDiagram
-    class GeneticAlgorithm{
-        +list population
-        +dict fitness_values
-        +__init__(population: list)
-        +evolve()
-        +calculate_fitness()
-    }
-    class NeuralNetwork{
-        +list layers
-        +__init__(layers: list)
-        +train()
-        +predict()
-    }
-    class DynamicLayer{
-        +int layer_size
-        +__init__(layer_size: int)
-        +generate()
-    }
-    class LearningParadigm{
-        +str paradigm
-        +__init__(paradigm: str)
-        +switch_paradigm()
-    }
-    class UserInterface{
-        +str task
-        +__init__(task: str)
-        +input_task()
-        +monitor_progress()
-        +provide_feedback()
-    }
-    class MemoryModule{
-        +list learned_information
-        +__init__(learned_information: list)
-        +store_information()
-    }
-    GeneticAlgorithm "1" -- "1" NeuralNetwork: has
-    NeuralNetwork "1" -- "1" DynamicLayer: has
-    NeuralNetwork "1" -- "1" LearningParadigm: has
-    UserInterface "1" -- "1" MemoryModule: has
-```
+- **GeneticAlgorithm** – population management, selection, crossover, mutation, elitism, history, injectable fitness.
+- **NeuralNetwork** – topology description, forward pass, training (NumPy SGD or Keras), genome-to-weight decoding.
+- **DynamicLayer** – produces serialisable layer specs that the GA can mutate.
+- **LearningParadigm** – switches learning strategy and applies paradigm-specific topology modifications.
+- **MemoryModule** – stores and retrieves experiences by task signature and tags.
+- **UserInterface** – task submission, progress monitoring, feedback collection; works with or without Flask.
 
-## Program call flow
-```mermaid
-sequenceDiagram
-    participant GA as GeneticAlgorithm
-    participant NN as NeuralNetwork
-    participant DL as DynamicLayer
-    participant LP as LearningParadigm
-    participant UI as UserInterface
-    participant MM as MemoryModule
-    GA->>NN: evolve()
-    NN->>DL: generate()
-    NN->>LP: switch_paradigm()
-    UI->>GA: input_task()
-    UI->>NN: monitor_progress()
-    UI->>MM: provide_feedback()
-    MM->>NN: store_information()
-```
+## Data Flow
+
+1. User (or demo) submits a task via UserInterface.
+2. MemoryModule records the task.
+3. GeneticAlgorithm is configured with a fitness function that evaluates candidate genomes on the task (via NeuralNetwork).
+4. Evolution runs; progress is pushed live to UserInterface.
+5. Best individual and summary metrics are stored in MemoryModule.
+6. User can supply feedback, which is also persisted.
+
+## Maturity Assessment
+
+| Concern | v0.1 (2023) | v0.2 (2026) |
+|---------|-------------|-------------|
+| Runnable out-of-the-box | No | Yes |
+| Fitness injection | Placeholder | Supported |
+| Termination safety | Infinite-loop risk | Generation limit + goal |
+| Memory durability | In-memory list | SQLite |
+| UI | Hard-coded Flask | Flask + CLI fallback |
+| Paradigm handlers | Empty `pass` | Functional topology changes |
+| Packaging | Flat scripts | Proper package with `__init__` |
+
+## Roadmap Alignment
+
+- **P0** (minimalist base + UI) → Complete
+- **P1** (dynamic layers, paradigm integration, continual learning) → Core mechanisms in place
+- **P2** (adaptive GA for diverse networks, rich memory) → Foundation ready; deeper architecture search and multi-agent coordination are the natural next increments
 
 ## Anything UNCLEAR
-The requirement is clear to me.
+
+None. The original vision remains the north star; v0.2 simply makes that vision executable.

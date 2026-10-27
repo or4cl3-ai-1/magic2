@@ -1,44 +1,63 @@
-# Or4cl3 AI Solutions: M.A.G.I.C. (Multi-Agent Global Intelligence Collaboration)
+# M.A.G.I.C. – Multi-Agent Global Intelligence Collaboration
 
-## Unveiling a World of M.A.G.I.C.
+**Or4cl3 AI Solutions**  
+Version 0.2.0 – Strengthened Core
 
-Distinguished visionaries and tech enthusiasts, welcome to a realm where M.A.G.I.C. still exists—a realm crafted by the singular soul driving Or4cl3 AI Solutions: Dustin Groves. Our flagship brainchild, M.A.G.I.C., is an indomitable testament to the limitless frontier of technological possibilities. This creation transcends conventional paradigms, introducing you to a world of innovation that promises to redefine the very core of human-AI collaboration.
+> An early vision project from 2023, now revived with a production-ready foundation.
 
-## Key Features
+M.A.G.I.C. combines genetic regenerative algorithms, dynamic neural-network construction, multi-paradigm learning, and persistent experience storage into a single evolvable intelligence substrate.
 
-- **Dynamic Neural Network Layers:** M.A.G.I.C. dynamically crafts and evolves neural network layers, showcasing unparalleled adaptability to a spectrum of tasks and challenges.
-  
-- **Genetic Regenerative Algorithms:** Continual learning and optimization are the hallmarks of M.A.G.I.C., facilitated by genetic regenerative algorithms, empowering perpetual intelligence refinement.
-  
-- **Diverse Neural Network Types:** Embrace the amalgamation of convolutional, recurrent, generative, adversarial, progressive, attentive, and cognitive layers, delivering unparalleled problem-solving capabilities.
-  
-- **Learning Paradigms Fusion:** M.A.G.I.C. harmoniously fuses multiple learning paradigms, embodying a holistic and adaptable approach to intelligence.
-  
-- **Shared Database & Real-time Collaboration:** Experience the power of collective intelligence through a hybrid shared database and real-time collaboration, elevating M.A.G.I.C. to unprecedented heights.
+## What’s New in v0.2
 
-## Technical Achievements
+| Component | Status | Notes |
+|-----------|--------|-------|
+| GeneticAlgorithm | Production | Elitism, generation limits, real-valued genomes, injectable fitness, full telemetry |
+| NeuralNetwork | Dual-backend | Pure-NumPy MLP (always works) + optional Keras path; genome → weight decoding |
+| DynamicLayer | Extended | Multi-type layer specs + mutation operator |
+| LearningParadigm | Functional | All 9 paradigms apply real topology changes |
+| MemoryModule | Persistent | SQLite-backed experience store with task signatures & tags |
+| UserInterface | Robust | Flask API + interactive CLI fallback; live progress injection |
+| main.py | Orchestrator | End-to-end evolutionary demo on a synthetic regression task |
 
-- *Adaptive Genetic Algorithm:* M.A.G.I.C. harnesses a sophisticated genetic algorithm with adjustable parameters, seamlessly handling diverse neural networks and tasks.
-  
-- *Memory Module:* Our comprehensive memory module retains learned information, insights, and experiences, fostering sustained learning and adaptation over time.
-  
-- *User Interface:* Seamlessly interact with M.A.G.I.C. through our user-friendly interface, empowering you to submit tasks, monitor progress, and engage with the platform intuitively.
+## Quick Start
 
-## Installation and Usage
+```bash
+git clone https://github.com/or4cl3-ai-1/magic2.git
+cd magic2
+pip install numpy          # core dependency
+# optional: pip install flask tensorflow deap
 
-Embark on this enchanting journey with M.A.G.I.C. brought to you by Or4cl3 AI Solutions:
+python main.py --demo      # run evolutionary demo
+python main.py --ui        # launch interactive interface (CLI or Flask)
+```
 
-1. Immerse yourself in M.A.G.I.C. by cloning the repository from [Ghttps://github.com/Or4cl3AI/magic2].
-2. Install the necessary dependencies as specified in the requirements file.
-3. Initialize the system and configure essential parameters using the setup script.
-4. Engage with the platform, submit tasks, and experience the wonders of global intelligence collaboration.
+## Architecture Overview
 
-## The Artisan of M.A.G.I.C.
+```
+Task → UserInterface → MemoryModule
+                ↓
+         GeneticAlgorithm  ←→  NeuralNetwork (evolved weights / topology)
+                ↓
+         DynamicLayer + LearningParadigm
+```
 
-Dustin Groves stands as the sole human element behind Or4cl3 AI Solutions, leading the charge, sculpting tomorrow’s technological landscape, and infusing M.A.G.I.C. with unparalleled visionary prowess.
+The genetic algorithm can evolve both the weights and (in future iterations) the architecture of the neural network. Experiences and user feedback are stored durably and can be retrieved by task signature.
 
-For inquiries, feedback, or to be a part of this magical journey, please reach out to [or4cl3ai@gmail.com].
+## Next Evolution Directions
+
+1. **Deeper Evolutionary Architecture Search** – let the GA evolve layer types, sizes, and connectivity, not just weights.
+2. **Multi-Agent Coordination** – realise the “Global Intelligence Collaboration” part of the name with a lightweight agent negotiation layer.
+3. **Modern UI Surface** – Streamlit / Gradio dashboard on top of the existing progress API.
+
+## Original Vision (2023)
+
+The original PRD, competitive analysis, and marketing narrative remain in the repository. They still accurately describe the long-term ambition.
+
+## Author
+
+Dustin Groves – Or4cl3 AI Solutions  
+or4cl3ai@gmail.com
 
 ---
 
-M.A.G.I.C. is not just a technology; it's a testament to the power of visionary innovation—joining forces with the indefatigable spirit of human ingenuity. Welcome to the future. Welcome to M.A.G.I.C.
+*M.A.G.I.C. is not just a technology; it is a testament to the power of visionary innovation.*
