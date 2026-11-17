@@ -1,63 +1,51 @@
 # M.A.G.I.C. – Multi-Agent Global Intelligence Collaboration
 
-**Or4cl3 AI Solutions**  
-Version 0.2.0 – Strengthened Core
+**Or4cl3 AI Solutions** · v0.5
 
-> An early vision project from 2023, now revived with a production-ready foundation.
+> Intelligence that collaborates & evolves.
 
-M.A.G.I.C. combines genetic regenerative algorithms, dynamic neural-network construction, multi-paradigm learning, and persistent experience storage into a single evolvable intelligence substrate.
-
-## What’s New in v0.2
-
-| Component | Status | Notes |
-|-----------|--------|-------|
-| GeneticAlgorithm | Production | Elitism, generation limits, real-valued genomes, injectable fitness, full telemetry |
-| NeuralNetwork | Dual-backend | Pure-NumPy MLP (always works) + optional Keras path; genome → weight decoding |
-| DynamicLayer | Extended | Multi-type layer specs + mutation operator |
-| LearningParadigm | Functional | All 9 paradigms apply real topology changes |
-| MemoryModule | Persistent | SQLite-backed experience store with task signatures & tags |
-| UserInterface | Robust | Flask API + interactive CLI fallback; live progress injection |
-| main.py | Orchestrator | End-to-end evolutionary demo on a synthetic regression task |
+M.A.G.I.C. fuses genetic regenerative algorithms, dynamic neural architecture search, multi-agent coordination, and persistent experience memory into a living substrate for adaptive problem-solving.
 
 ## Quick Start
 
 ```bash
 git clone https://github.com/or4cl3-ai-1/magic2.git
 cd magic2
-pip install numpy          # core dependency
-# optional: pip install flask tensorflow deap
+pip install -r requirements.txt
 
-python main.py --demo      # run evolutionary demo
-python main.py --ui        # launch interactive interface (CLI or Flask)
+# Multi-agent collaboration
+python main.py --multi-agent
+
+# Evolutionary architecture search
+python main.py --arch-search
+
+# Classic weight evolution
+python main.py --demo
+
+# Live Streamlit dashboard
+streamlit run ui_dashboard.py
 ```
 
-## Architecture Overview
+## What’s Included
 
-```
-Task → UserInterface → MemoryModule
-                ↓
-         GeneticAlgorithm  ←→  NeuralNetwork (evolved weights / topology)
-                ↓
-         DynamicLayer + LearningParadigm
-```
+| Component | Description |
+|-----------|-------------|
+| **GeneticAlgorithm** | Elitism, real-valued genomes, injectable fitness, full telemetry |
+| **Architecture Search** | Evolve layer types, sizes, depth & activations |
+| **Multi-Agent Layer** | Explorer · Optimizer · Critic · MemoryKeeper + auction Coordinator |
+| **MemoryModule** | SQLite-backed experience store |
+| **Streamlit Dashboard** | Live control panel, agent status, memory browser, charts |
+| **Landing Page** | `index.html` – cinematic dark UI |
 
-The genetic algorithm can evolve both the weights and (in future iterations) the architecture of the neural network. Experiences and user feedback are stored durably and can be retrieved by task signature.
+## Landing Page
 
-## Next Evolution Directions
-
-1. **Deeper Evolutionary Architecture Search** – let the GA evolve layer types, sizes, and connectivity, not just weights.
-2. **Multi-Agent Coordination** – realise the “Global Intelligence Collaboration” part of the name with a lightweight agent negotiation layer.
-3. **Modern UI Surface** – Streamlit / Gradio dashboard on top of the existing progress API.
-
-## Original Vision (2023)
-
-The original PRD, competitive analysis, and marketing narrative remain in the repository. They still accurately describe the long-term ambition.
+Open `index.html` in a browser or enable GitHub Pages on this repository (source: root / `index.html`).
 
 ## Author
 
 Dustin Groves – Or4cl3 AI Solutions  
-or4cl3ai@gmail.com
+[github.com/or4cl3-ai-1/magic2](https://github.com/or4cl3-ai-1/magic2)
 
 ---
 
-*M.A.G.I.C. is not just a technology; it is a testament to the power of visionary innovation.*
+*M.A.G.I.C. began as an early vision in 2023. It has returned stronger.*
